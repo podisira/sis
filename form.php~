@@ -1,0 +1,39 @@
+<html>
+ 
+              <table cellpadding="30" cellspacing="10" >
+            
+              <tr>
+                  <td>User Name</td>
+                  <td><input type="text" tabindex="1" name="uname" value="" size="16" /></td>
+
+              </tr>
+              <tr>
+                  <td>Password</td>
+                  <td><input type="password" tabindex="2" name="password" value="" size="16" /></td>
+              </tr>
+
+              <tr>
+                  <td colspan="2">
+                      <input type="submit" tabindex="3" value="Register" name="submit" class="subbtn" />
+                  </td><td></td>
+              </tr>
+            </table>
+            
+            <?php
+include 'dbconnection.php';
+if($_POST['submit'])
+      {
+      	  $uname=$_POST['uname'];
+      	  $pass=$_POST['password'];
+   $sql1 = mysql_query("INSERT INTO acount VALUES ('" . $uname . "','" . $pass."')");
+   if(!$sql1){
+   	   echo "Data not success fully inserted into database User";
+        
+      }
+      else{
+      	  echo "Successfully inserted into Database User";
+      }
+      }
+?>
+
+</html>

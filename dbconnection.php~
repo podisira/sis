@@ -1,0 +1,49 @@
+
+
+<?php
+
+/*
+***************************************************
+*** Student Information System                   ***
+***---------------------------------------------***
+*** Developer: Dejene Techane                   ***
+*** Title:          ***
+***************************************************
+*/
+
+  
+$dbserver="localhost";
+
+//username of the MySQL server
+$dbusername="root";
+
+//password
+
+$dbpassword="1838/02";
+
+//database name of the online Examination system
+$db1="User";
+$db2="StudentDb";
+
+
+$conn1=mysql_connect($dbserver,$dbusername,$dbpassword);
+$conn2=mysql_connect($dbserver,$dbusername,$dbpassword,TRUE);
+if(!$conn1){
+	die("Could not selected Database Db1.".mysql_error());
+}
+else{
+	mysql_select_db($db1,$conn1);
+		//mysql_close($conn1);
+}
+if(!$conn2){
+	die("Could not selected Database Db2.".mysql_error());
+}
+else{
+	mysql_select_db($db2,$conn2);
+	//mysql_close($conn2);
+}
+
+
+      	
+      
+?>

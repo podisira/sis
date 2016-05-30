@@ -1,0 +1,99 @@
+<?php
+//the purpose of this project is inserting into and retrieving data from different database 
+include 'dbconnection.php';
+
+if(isset($_POST['submit'])){
+	     
+if(empty($_REQUEST['oldpass'])||empty ($_REQUEST['newpass'])||empty ($_REQUEST['repass']))
+    {
+         $_GLOBALS['message']="Some of the required Fields are Empty.Therefore Nothing is Updated";
+    }
+    //retrieving values from the form and encrypting password
+    $oldpass=md5(htmlspecialchars($_REQUEST['oldpass'],ENT_QUOTES));
+    $newpass=md5(htmlspecialchars($_REQUEST['newpass'],ENT_QUOTES));
+    $repass=md5(htmlspecialchars($_REQUEST['repass'],ENT_QUOTES));
+    //retrieving oldpassword from database
+    $result=mysql_query("select password from acount where username='".$_SESSION['username']."';");
+    $r=mysql_fetch_array($result);
+    
+    if(!($oldpass==$r['password'])){
+    	$_GLOBALS['message']="Old password is not correct";
+   }else if(!($newpass==$repass)){
+   	   $_GLOBALS['message']="New password & Re-password is not the same";
+   	   
+    }else
+    {
+     $query="update user set password='".$newpass."' where id='".$_REQUEST['user']."';";
+     if(!mysql_query($query))
+        $_GLOBALS['message']=mysql_error();
+     else                                                           
+        $_GLOBALS['message']="Your Password is Successfully Updated.Click here to <a href=\"../index.php\">Re-LogIn</a>";
+        unset($_SESSION['username']);
+    }
+   
+
+}
+?>
+
+<html>
+    <head>
+        <title>STUDENT INFORMATION</title>
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+     <link rel="icon" type="jpg/png" href="logo.png"/>
+    <link rel="stylesheet" type="text/css" href="sis.css"/>
+        </head>
+        <body bgcolor="gray">
+        
+        <div id="container">
+            <div class="header">                              
+                <?php require'header.php';?>                
+                </div>
+            <div class="menubar">
+
+                <form name="studentform" action="changepass.php" method="post">
+                    <ul id="menu">
+          <?php include'menus.php';?>
+                        
+                    </ul>
+                </form>
+            </div>
+            <div class="page">
+ <form method="post" action="">
+<table cellpadding="20" cellspacing="20" style="text-align:left;margin-left:15em" >   
+           <tr><td colspan=30><div class="help">Password Must contain at least one number and one uppercase </br>or lowercase letter,
+           and at least 6 or more characters</div></td>
+           </tr>
+              <tr>
+                  <td>User Name</td>
+                  <td><input type="text" name="uname" value="<?php echo htmlspecialchars_decode($r['username'],ENT_QUOTES); ?>" size="25" onkeyup="isalphanum(this)" readonly/></td>
+              </tr>
+               <tr>
+                  <td>Old Password</td>
+                  <td><input type="password" name="oldpass" value="" size="25" onkeyup="isalphanum(this)" placeholder ="Enter Old Password"/></td>                 
+              </tr>
+              	<tr>
+                   <td>New Password</td>
+                   <td><input type="password" name="newpass" value="" size="25" onkeyup="isalphanum(this)" onblur="if(this.value==''){alert('New Password field is Empty');this.focus();this.value='';}" placeholder="Enter New Password"
+                   pattern="(?=.*\d)(?=.*[A-Za-z]).{6,}"title="Password Must contain at least one number and one uppercase or lowercase letter, and at least 6 or more characters"/></td>
+                   </tr>
+                    <tr>
+                      <td>Re-type Password</td>
+                       <td><input type="password" name="repass" value="" size="25" onkeyup="isalphanum(this)" onblur="if(this.value==''){alert('Re-type Password field is Empty');this.focus();this.value='';}" placeholder="Enter password again" 
+                       pattern="(?=.*\d)(?=.*[A-Za-z]).{6,}"title="Password Must contain at least one number and one uppercase or lowercase letter, and at least 6 or more characters"/>
+                       <input type="hidden" name="user" value="<?php echo $r['id']; ?>"/></td>
+                       
+              </tr>
+              <tr> 
+              <td colspan="2">
+                      <input type="submit" tabindex="3" value="Update" name="submit" class="subbtn" />
+                  </td>
+</tr>
+            </table>
+            
+             </div>
+          <div id="footer">
+    <?php include'footer.php';?>
+             </div>
+             
+</body>
+</html>
